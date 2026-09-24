@@ -1,0 +1,9 @@
+# Go
+backend/bin/
+backend/*.exe
+
+# Environment variables
+.env
+
+# OS
+.DS_Store
