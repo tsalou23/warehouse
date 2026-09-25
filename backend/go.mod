@@ -1,3 +1,5 @@
 module github.com/tsalou23/warehouse
 
 go 1.25.1
+
+require github.com/go-chi/chi/v5 v5.3.2 // indirect
