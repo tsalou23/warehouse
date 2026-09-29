@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
+	"github.com/tsalou23/warehouse/internal/warehouse"
 )
 
 func main() {
@@ -26,6 +27,9 @@ func main() {
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
 	})
+	store := warehouse.NewStore(conn)
+	handler := warehouse.NewHandler(store)
+	r.Get("/warehouses", handler.GetAll)
 
 	http.ListenAndServe(":8080", r)
 
