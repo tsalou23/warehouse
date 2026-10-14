@@ -47,7 +47,7 @@ CREATE TABLE replenishment_items(
     request_id INTEGER NOT NULL REFERENCES replenishment_requests(id),
     variant_id INTEGER NOT NULL REFERENCES product_variants(id),
     required_quantity INTEGER NOT NULL CHECK( required_quantity>0),
-    picked_quantity INTEGER NOT NULL CHECK(picked_quantity>=0),
+    total_picked_quantity INTEGER NOT NULL CHECK(total_picked_quantity>=0),
     UNIQUE (request_id,variant_id),
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
