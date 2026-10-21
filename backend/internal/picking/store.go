@@ -40,7 +40,7 @@ func (s *Store) UpdateStatus(ctx context.Context, id, pickedQuantity int, status
 		return err
 	}
 	var variantId int
-	err = tx.QueryRow(ctx, "SELECT variant_id FROM replenishment_items WHERE id=$1", itemId).Scan(&variantId)
+	err = tx.QueryRow(ctx, "SELECT size_id FROM replenishment_items WHERE id=$1", itemId).Scan(&variantId)
 	if err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func (s *Store) UpdateStatus(ctx context.Context, id, pickedQuantity int, status
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(ctx, "UPDATE inventory SET quantity=quantity-$1,updated_at=NOW() WHERE location_id=$2 AND variant_id=$3", pickedQuantity, locationId, variantId)
+	_, err = tx.Exec(ctx, "UPDATE inventory SET quantity=quantity-$1,updated_at=NOW() WHERE location_id=$2 AND size_id=$3", pickedQuantity, locationId, variantId)
 	if err != nil {
 		return err
 	}

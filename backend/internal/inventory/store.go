@@ -15,7 +15,7 @@ func NewStore(db *pgx.Conn) *Store {
 }
 
 func (s *Store) GetAll(ctx context.Context) ([]Inventory, error) {
-	rows, err := s.db.Query(ctx, "SELECT id,location_id,variant_id,quantity,updated_at FROM inventory")
+	rows, err := s.db.Query(ctx, "SELECT id,location_id,size_id,quantity,updated_at FROM inventory")
 	if err != nil {
 
 		return nil, err
@@ -24,7 +24,7 @@ func (s *Store) GetAll(ctx context.Context) ([]Inventory, error) {
 	var inventory []Inventory
 	for rows.Next() {
 		var w Inventory
-		rows.Scan(&w.Id, &w.LocationId, &w.VariantId, &w.Quantity, &w.UpdatedAt)
+		rows.Scan(&w.Id, &w.LocationId, &w.SizeId, &w.Quantity, &w.UpdatedAt)
 		inventory = append(inventory, w)
 
 	}

@@ -3,14 +3,12 @@ CREATE TABLE products(
     sku TEXT UNIQUE NOT NULL,
     name TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL
-
 );
 CREATE TABLE warehouses(
     id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL,
     type VARCHAR NOT NULL CHECK(type IN('hanging','folded')),
     created_at TIMESTAMP NOT NULL
-
 );
 CREATE TABLE locations(
     id SERIAL PRIMARY KEY,
@@ -20,9 +18,10 @@ CREATE TABLE locations(
     sort_order INT NOT NULL,
     created_at TIMESTAMP NOT NULL
 );
-CREATE TABLE product_variants(
+CREATE TABLE product_sizes(
     id SERIAL PRIMARY KEY,
     product_id INTEGER NOT NULL REFERENCES products(id),
+    sku TEXT UNIQUE NOT NULL,
     size TEXT NOT NULL CHECK (size IN('xs','s','m','l','xl')),
     created_at TIMESTAMP NOT NULL,
     UNIQUE(product_id,size)
@@ -30,11 +29,10 @@ CREATE TABLE product_variants(
 CREATE TABLE inventory(
     id SERIAL PRIMARY KEY,
     location_id INTEGER NOT NULL REFERENCES locations(id),
-    variant_id INTEGER NOT NULL REFERENCES product_variants(id),
+    size_id INTEGER NOT NULL REFERENCES product_sizes(id),
     quantity INTEGER NOT NULL CHECK (quantity>=0),
-    UNIQUE(location_id,variant_id),
+    UNIQUE(location_id,size_id),
     updated_at TIMESTAMP NOT NULL
-
 );
 CREATE TABLE replenishment_requests(
     id SERIAL PRIMARY KEY,
@@ -45,10 +43,10 @@ CREATE TABLE replenishment_requests(
 CREATE TABLE replenishment_items(
     id SERIAL PRIMARY KEY,
     request_id INTEGER NOT NULL REFERENCES replenishment_requests(id),
-    variant_id INTEGER NOT NULL REFERENCES product_variants(id),
+    size_id INTEGER NOT NULL REFERENCES product_sizes(id),
     required_quantity INTEGER NOT NULL CHECK( required_quantity>0),
     total_picked_quantity INTEGER NOT NULL CHECK(total_picked_quantity>=0),
-    UNIQUE (request_id,variant_id),
+    UNIQUE (request_id,size_id),
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
 );
@@ -61,7 +59,6 @@ CREATE TABLE warehouse_allocations(
     updated_at TIMESTAMP NOT NULL,
     UNIQUE (item_id,warehouse_id)
 );
-
 CREATE TABLE picking_attempts(
     id SERIAL PRIMARY KEY,
     item_id INTEGER NOT NULL REFERENCES replenishment_items(id),
