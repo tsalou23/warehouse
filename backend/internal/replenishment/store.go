@@ -43,7 +43,7 @@ func (s *Store) Create(ctx context.Context, items []ReplenishmentItem) (*Repleni
 		return nil, err
 	}
 	for _, item := range items {
-		_, err = tx.Exec(ctx, "INSERT INTO replenishment_items(request_id,size_id,required_quantity,total_picked_quantity,created_at,updated_at) VALUES ($1,$2,$3,0,NOW(),NOW())", req.Id, item.VariantId, item.RequiredQuantity)
+		_, err = tx.Exec(ctx, "INSERT INTO replenishment_items(request_id,variant_id,required_quantity,total_picked_quantity,created_at,updated_at) VALUES ($1,$2,$3,0,NOW(),NOW())", req.Id, item.VariantId, item.RequiredQuantity)
 		if err != nil {
 			return nil, err
 		}
@@ -53,7 +53,7 @@ func (s *Store) Create(ctx context.Context, items []ReplenishmentItem) (*Repleni
 }
 func (s *Store) AddItems(ctx context.Context, requestId int, items []ReplenishmentItem) error {
 	for _, item := range items {
-		_, err := s.db.Exec(ctx, "INSERT INTO replenishment_items(request_id,size_id,required_quantity,total_picked_quantity,created_at,updated_at) VALUES ($1,$2,$3,0,NOW(),NOW())", requestId, item.VariantId, item.RequiredQuantity)
+		_, err := s.db.Exec(ctx, "INSERT INTO replenishment_items(request_id,variant_id,required_quantity,total_picked_quantity,created_at,updated_at) VALUES ($1,$2,$3,0,NOW(),NOW())", requestId, item.VariantId, item.RequiredQuantity)
 		if err != nil {
 			return err
 		}

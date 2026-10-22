@@ -9,10 +9,10 @@ type Product struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-type ProductSize struct {
+type ProductVariant struct {
 	Id        int       `json:"id"`
 	ProductId int       `json:"product_id"`
+	SizeId    int       `json:"size_id"`
 	Sku       string    `json:"sku"`
-	Size      string    `json:"size"`
 	CreatedAt time.Time `json:"created_at"`
 }

@@ -29,17 +29,27 @@ func (s *Store) GetAll(ctx context.Context) ([]Product, error) {
 	return products, nil
 }
 
-func (s *Store) GetAllProductSizes(ctx context.Context, productId int) ([]ProductSize, error) {
-	rows, err := s.db.Query(ctx, "SELECT id,product_id,sku,size,created_at FROM product_sizes WHERE product_id=$1", productId)
+func (s *Store) GetAllProductVariants(ctx context.Context, productId int) ([]ProductVariant, error) {
+	rows, err := s.db.Query(ctx, "SELECT id,product_id,size_id,sku,created_at FROM product_variants WHERE product_id=$1", productId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var productSizes []ProductSize
+	var variants []ProductVariant
 	for rows.Next() {
-		var w ProductSize
-		rows.Scan(&w.Id, &w.ProductId, &w.Sku, &w.Size, &w.CreatedAt)
-		productSizes = append(productSizes, w)
+		var w ProductVariant
+		rows.Scan(&w.Id, &w.ProductId, &w.SizeId, &w.Sku, &w.CreatedAt)
+		variants = append(variants, w)
 	}
-	return productSizes, nil
+	return variants, nil
+}
+
+func (s *Store) GetVariantBySKU(ctx context.Context, sku string) (*ProductVariant, error) {
+	var v ProductVariant
+	err := s.db.QueryRow(ctx, "SELECT id,product_id,size_id,sku,created_at FROM product_variants WHERE sku=$1", sku).
+		Scan(&v.Id, &v.ProductId, &v.SizeId, &v.Sku, &v.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+	return &v, nil
 }

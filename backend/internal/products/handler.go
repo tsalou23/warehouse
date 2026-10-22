@@ -25,16 +25,16 @@ func (h *Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(products)
 }
 
-func (h *Handler) GetProductSizes(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetProductVariants(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		http.Error(w, "invalid id", http.StatusBadRequest)
 		return
 	}
-	productSizes, err := h.store.GetAllProductSizes(r.Context(), id)
+	variants, err := h.store.GetAllProductVariants(r.Context(), id)
 	if err != nil {
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 		return
 	}
-	json.NewEncoder(w).Encode(productSizes)
+	json.NewEncoder(w).Encode(variants)
 }

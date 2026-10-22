@@ -38,7 +38,7 @@ func main() {
 	productStore := products.NewStore(conn)
 	productHandler := products.NewHandler(productStore)
 	r.Get("/products", productHandler.GetAll)
-	r.Get("/products/{id}/sizes", productHandler.GetProductSizes)
+	r.Get("/products/{id}/variants", productHandler.GetProductVariants)
 
 	inventoryStore := inventory.NewStore(conn)
 	inventoryHandler := inventory.NewHandler(inventoryStore)
