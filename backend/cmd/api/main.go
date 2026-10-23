@@ -10,6 +10,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 	"github.com/tsalou23/warehouse/internal/inventory"
+	"github.com/tsalou23/warehouse/internal/locations"
 	"github.com/tsalou23/warehouse/internal/picking"
 	"github.com/tsalou23/warehouse/internal/products"
 	"github.com/tsalou23/warehouse/internal/replenishment"
@@ -53,6 +54,9 @@ func main() {
 	pickingHandler := picking.NewHandler(pickingStore)
 	r.Post("/picking-attempts", pickingHandler.Create)
 	r.Patch("/picking-attempts/{id}", pickingHandler.UpdateStatus)
+	locationsStore := locations.NewStore(conn)
+	locationsHandler := locations.NewHandler(locationsStore)
+	r.Get("/warehouses/{id}/locations", locationsHandler.GetLocationsByWarehouseId)
 
 	http.ListenAndServe(":8080", r)
 
