@@ -63,3 +63,22 @@ func (h *Handler) AddItems(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 }
+func (h *Handler) NextLocation(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "invalid request id", http.StatusBadRequest)
+		return
+	}
+	warehouse_id, err := strconv.Atoi(r.URL.Query().Get("warehouse_id"))
+	if err != nil {
+		http.Error(w, "invalid warehouse id ", http.StatusBadRequest)
+		return
+	}
+	location, err := h.store.GetNextLocation(r.Context(), warehouse_id, id)
+	if err != nil {
+		http.Error(w, "something went wrong", http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(location)
+
+}

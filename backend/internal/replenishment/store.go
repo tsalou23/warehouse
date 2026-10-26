@@ -60,3 +60,21 @@ func (s *Store) AddItems(ctx context.Context, requestId int, items []Replenishme
 	}
 	return nil
 }
+func (s *Store) GetNextLocation(ctx context.Context, warehouseId int, requestId int) (*NextLocation, error) {
+
+	var l NextLocation
+	err := s.db.QueryRow(ctx, `SELECT locations.id,locations.code,locations.sort_order
+	FROM locations
+	JOIN inventory ON inventory.location_id=locations.id
+	JOIN replenishment_items ON replenishment_items.variant_id=inventory.variant_id
+	WHERE locations.warehouse_id=$1
+	AND replenishment_items.request_id=$2
+	AND	inventory.quantity >0
+	ORDER by locations.sort_order
+	LIMIT 1`, warehouseId, requestId).Scan(&l.Id, &l.Code, &l.SortOrder)
+	if err != nil {
+		return nil, err
+	}
+	return &l, nil
+
+}

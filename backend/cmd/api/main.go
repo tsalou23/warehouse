@@ -49,6 +49,7 @@ func main() {
 	r.Get("/replenishment-requests", replenishmentHandler.GetAll)
 	r.Post("/replenishment-requests", replenishmentHandler.Create)
 	r.Post("/replenishment-requests/{id}/items", replenishmentHandler.AddItems)
+	r.Get("/replenishment-requests/{id}/next-location", replenishmentHandler.NextLocation)
 
 	pickingStore := picking.NewStore(conn)
 	pickingHandler := picking.NewHandler(pickingStore)
